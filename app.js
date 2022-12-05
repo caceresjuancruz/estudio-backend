@@ -15,20 +15,12 @@ const conexion = mysql.createPool({
   debug: false,
 });
 
-// conexion.connect(function (error) {
-//   if (error) {
-//     throw error;
-//   } else {
-//     console.log("CONEXION EXITOSA");
-//   }
-// });
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-const PORT = 8000;
+const PORT = 3000;
 
 app.listen(PORT, (error) => {
   if (!error) {
