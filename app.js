@@ -3,6 +3,7 @@ const mysql = require("mysql");
 require("dotenv").config();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const { response } = require("express");
 
 const conexion = mysql.createPool({
   connectionLimit: 100,
@@ -38,6 +39,58 @@ app.get("/codigos", (req, res) => {
     }
     console.log(result);
     res.json(result);
+  });
+});
+
+app.post("/verificar-butacas-platea-baja", async (req, res) => {
+  const butacas = req.body.butacas;
+  let sql = "SELECT * FROM `ButacasPlateaBaja` WHERE `fila`=? AND `butaca`=?";
+  butacas.some((butaca, index) => {
+    conexion.query(sql, [butaca.fila, butaca.butaca], (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!err) {
+        if (result[0].disponible === 0 && !res.headersSent) {
+          return res.json({ result: false });
+        }
+        if (index + 1 === butacas.length) {
+          if (!res.headersSent) {
+            if (result[0].disponible === 0) {
+              return res.json({ result: false });
+            } else {
+              return res.json({ result: true });
+            }
+          }
+        }
+      }
+    });
+  });
+});
+
+app.post("/verificar-butacas-platea-alta", async (req, res) => {
+  const butacas = req.body.butacas;
+  let sql = "SELECT * FROM `ButacasPlateaAlta` WHERE `fila`=? AND `butaca`=?";
+  butacas.some((butaca, index) => {
+    conexion.query(sql, [butaca.fila, butaca.butaca], (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!err) {
+        if (result[0].disponible === 0 && !res.headersSent) {
+          return res.json({ result: false });
+        }
+        if (index + 1 === butacas.length) {
+          if (!res.headersSent) {
+            if (result[0].disponible === 0) {
+              return res.json({ result: false });
+            } else {
+              return res.json({ result: true });
+            }
+          }
+        }
+      }
+    });
   });
 });
 
@@ -131,6 +184,59 @@ app.post("/actualizar-ubicaciones-platea-alta", (req, res) => {
 //ENDPOINTS 2DO SHOW
 //
 //
+
+app.post("/verificar-butacas-platea-baja2", async (req, res) => {
+  const butacas = req.body.butacas;
+  let sql = "SELECT * FROM `ButacasPlateaBaja_2` WHERE `fila`=? AND `butaca`=?";
+  butacas.some((butaca, index) => {
+    conexion.query(sql, [butaca.fila, butaca.butaca], (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!err) {
+        if (result[0].disponible === 0 && !res.headersSent) {
+          return res.json({ result: false });
+        }
+        if (index + 1 === butacas.length) {
+          if (!res.headersSent) {
+            if (result[0].disponible === 0) {
+              return res.json({ result: false });
+            } else {
+              return res.json({ result: true });
+            }
+          }
+        }
+      }
+    });
+  });
+});
+
+app.post("/verificar-butacas-platea-alta2", async (req, res) => {
+  const butacas = req.body.butacas;
+  let sql = "SELECT * FROM `ButacasPlateaAlta_2` WHERE `fila`=? AND `butaca`=?";
+  butacas.some((butaca, index) => {
+    conexion.query(sql, [butaca.fila, butaca.butaca], (err, result) => {
+      if (err) {
+        throw err;
+      }
+      if (!err) {
+        if (result[0].disponible === 0 && !res.headersSent) {
+          return res.json({ result: false });
+        }
+        if (index + 1 === butacas.length) {
+          if (!res.headersSent) {
+            if (result[0].disponible === 0) {
+              return res.json({ result: false });
+            } else {
+              return res.json({ result: true });
+            }
+          }
+        }
+      }
+    });
+  });
+});
+
 app.get("/butacas-platea-baja-2", (req, res) => {
   let sql = "SELECT * FROM ButacasPlateaBaja_2";
   conexion.query(sql, (err, result) => {
